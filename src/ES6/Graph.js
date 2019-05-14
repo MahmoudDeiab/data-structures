@@ -16,7 +16,7 @@ class Graph {
     this.adjList[firstVertex].push(secondVertex);
   }
 
-  traverseDFS(vertexId, callback, visited = {}, distance = 0) {
+  traverseDF(vertexId, callback, visited = {}, distance = 0) {
     visited[vertexId] = true;
     callback(vertexId, distance);
     this.adjList[vertexId].forEach(neighbourVertex => {
@@ -25,5 +25,21 @@ class Graph {
       }
       this.traverseDFS(neighbourVertex, callback, visited, distance + 1);
     });
+  }
+
+  traverseBF(initialVertextId, callback, visited = {}, queue = []) {
+    queue = [initialVertextId];
+    visited[initialVertextId] = 0;
+    while (queue.length) {
+      const currentVertext = queue.shift();
+      callback(currentVertext, visited[currentVertext]);
+      const neighbours = this.adjList[currentVertext].filter(neighbour => {
+        if (visited[neighbour] === undefined) {
+          visited[neighbour] = visited[currentVertext] + 1;
+          return true;
+        }
+      });
+      queue = queue.concat(neighbours);
+    }
   }
 }
